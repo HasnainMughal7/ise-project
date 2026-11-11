@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.21)
+project(BarcodeStudio VERSION 1.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets Multimedia)
+find_package(ZXing REQUIRED CONFIG)
+
+add_library(barcode_core src/Barcode.cpp src/ImageReader.cpp)
+target_include_directories(barcode_core PUBLIC src)
+target_link_libraries(barcode_core PUBLIC Qt6::Widgets ZXing::ZXing)
+
+add_library(barcode_camera src/CameraScanner.cpp)
+target_link_libraries(barcode_camera PUBLIC barcode_core Qt6::Multimedia)
+
+add_executable(BarcodeStudio src/main.cpp src/MainWindow.cpp)
+target_link_libraries(BarcodeStudio PRIVATE barcode_camera)
+set_target_properties(BarcodeStudio PROPERTIES WIN32_EXECUTABLE TRUE)
+
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(barcode_tests tests/barcode_tests.cpp)
+    target_link_libraries(barcode_tests PRIVATE barcode_core)
+    add_test(NAME barcode_roundtrip COMMAND barcode_tests)
+    set_tests_properties(barcode_roundtrip PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+endif()
