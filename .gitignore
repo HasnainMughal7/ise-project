@@ -1,0 +1,6 @@
+build/
+*.user
+*.exe
+*.dll
+data/Store.lock
+data/Pending.json
