@@ -1,37 +1,35 @@
 #pragma once
+#include "Checkout.h"
+#include <QMainWindow>
 
-#include "CameraScanner.h"
-#include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QComboBox>
-#include <QTabWidget>
-
-class MainWindow : public QWidget {
+class QTableWidget;
+class QLabel;
+class QLineEdit;
+class QComboBox;
+class QDoubleSpinBox;
+class MainWindow : public QMainWindow {
 public:
-    MainWindow();
+    MainWindow(Checkout& checkout, const QString& dataDirectory);
+protected:
+    void closeEvent(QCloseEvent* event) override;
 private:
-    QWidget* makeGeneratePage();
-    QWidget* makeReadPage();
-    void generate();
-    void saveAs();
-    void upload();
-    void clearGenerated();
-    void clearScan();
-    void showImage(QLabel* label, const QImage& image);
-    CameraScanner scanner;
-    QTabWidget* tabs;
-    QLineEdit* input;
-    QLabel* generatedPreview;
-    QLabel* generateStatus;
-    QPushButton* saveButton;
-    QLabel* scanPreview;
-    QLabel* scanStatus;
-    QLabel* resultLabel;
-    QComboBox* cameras;
-    QPushButton* startButton;
-    QPushButton* stopButton;
-    QImage generated;
-    QString generatedNumber;
+    Checkout& checkout;
+    QString directory;
+    QTableWidget *cartTable, *catalogTable, *ordersTable;
+    QLabel *totalsLabel, *message, *lastProduct;
+    QLineEdit *customer, *contact, *merchant, *payment;
+    QComboBox *status, *mode;
+    QDoubleSpinBox *quantity;
+    QWidget* makeCheckoutPage();
+    QWidget* makeCatalogPage();
+    QWidget* makeOrdersPage();
+    QWidget* makeBarcodePage();
+    void refresh();
+    void updatePayment();
+    void scan(bool addToOrder);
+    void describe(const Product* product);
+    void generateBill();
+    void showBill(const QString& orderId);
+    void changeStatus(bool paid);
+    void showError(const QString& error);
 };
