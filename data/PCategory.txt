@@ -1,0 +1,6 @@
+12 Dairy DAIRY #
+34 Grains GRAIN #
+13 Bakery BAKERY #
+98 Eggs EGGS #
+19 Tea TEA #
+10 "General Grocery" GENERAL #
