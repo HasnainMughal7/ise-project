@@ -1,30 +1,46 @@
 #pragma once
+#include "Access.h"
 #include "Store.h"
-#include <QDateTime>
 
 class Checkout {
-public:
-    explicit Checkout(Store& store);
+  public:
+    Checkout(Store& store, Access& access);
     bool load(QString& error);
-    const StoreState& data() const { return state; }
-    const QVector<OrderLine>& items() const { return cart; }
-    const Product* product(const QString& id) const;
-    const Product* findBarcode(const QString& barcode) const;
-    bool add(const QString& barcode, qint64 quantity, QString& error);
-    bool changeQuantity(int row, qint64 quantity, QString& error);
-    void remove(int row);
-    void clear();
-    Totals totals() const;
-    bool issueBill(Order customer, const QDateTime& when, Bill& bill, QString& error);
-    bool markPaid(const QString& orderId, QString& error);
-    bool archive(const QString& orderId, QString& error);
-    bool isBlocked() const { return blocked; }
-private:
+    const StoreState& data() const {
+        return state;
+    }
+    const Order& cart() const {
+        return draft;
+    }
+    const Order* findOrder(const QString& id) const;
+    const Product* findCode(const QString& code) const;
+    bool openOrder(const QString& id, const QString& approvalPin, QDateTime now, QString& error);
+    void discard();
+    bool add(const QString& code, qint64 quantity, QString& error);
+    bool quantity(int row, qint64 value, QString& error);
+    bool remove(int row);
+    Order priced(int specialRate, QDateTime now) const;
+    bool finish(const QString& status, QString customer, QString contact, QString mode,
+                QString merchant, int specialRate, qint64 received, QDateTime now, QString& orderId,
+                QString& error);
+    bool cancelHeld(const QString& id, QString& error);
+    bool archive(const QString& id, QString& error);
+    bool addCategory(Category item, QString& error);
+    bool putProduct(Product item, QString& outCode, QString& error);
+    bool setStock(const QString& id, qint64 available, QString& error);
+    bool putSeason(int row, Season season, QString& error);
+    bool blocked() const {
+        return writeBlocked;
+    }
+
+  private:
     Store& store;
+    Access& access;
     StoreState state;
-    QVector<OrderLine> cart;
-    bool blocked = false;
-    bool saveState(const StoreState& next, QString& error);
-    bool checkQuantity(const Product& product, qint64 quantity, QString& error) const;
-    bool updateStatus(const QString& orderId, bool paid, QString& error);
+    Order draft;
+    QString approvedId;
+    bool writeBlocked = false;
+    bool publish(const StoreState& next, QString& error);
+    bool checkStock(const Product& p, qint64 desired, QString& error) const;
+    bool managerOnly(QString& error) const;
 };
