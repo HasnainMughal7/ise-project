@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ScanGate.h"
 #include <QCamera>
 #include <QElapsedTimer>
 #include <QImage>
@@ -9,24 +10,24 @@
 
 class CameraScanner : public QObject {
     Q_OBJECT
-public:
+  public:
     explicit CameraScanner(QObject* parent = nullptr);
     ~CameraScanner();
     void start(int deviceIndex);
     void stop();
     void processFrame(const QVideoFrame& frame);
-signals:
+  signals:
     void frameReady(const QImage& image);
     void codeFound(const QString& number);
     void problem(const QString& message);
     void runningChanged(bool running);
-private:
+
+  private:
     QCamera camera;
     QMediaCaptureSession session;
     QVideoSink sink;
     QElapsedTimer clock;
     QTimer watchdog;
     bool running = false;
-    QString candidate;
-    int matches = 0;
+    ScanGate gate;
 };
