@@ -1,0 +1,8 @@
+1 123456 MILK1L "Fresh Milk 1 L" count 250.00 10.00 5.00 24.000 barcodes/barcode_123456.png 12 #
+2 345678 RICE "Basmati Rice" weight 300.00 15.00 10.00 10.000 barcodes/barcode_345678.png 34 #
+3 131676 BREAD "Whole Wheat Bread" count 180.00 0.00 0.00 16.000 barcodes/barcode_131676.png 13 #
+4 987654 EGGS6 "Eggs Pack of 6" count 210.00 0.00 10.00 20.000 barcodes/barcode_987654.png 98 #
+5 195028 TEA200 "Tea 200 g" count 420.00 20.00 15.00 12.000 barcodes/barcode_195028.png 19 #
+6 100001 SUGAR "White Sugar" weight 160.00 0.00 0.00 25.000 barcodes/barcode_100001.png 10 #
+7 100002 APPLE "Fresh Apples" weight 280.00 0.00 5.00 15.000 barcodes/barcode_100002.png 10 #
+8 100003 SOAP "Hand Soap" count 120.00 6.00 0.00 30.000 barcodes/barcode_100003.png 10 #
